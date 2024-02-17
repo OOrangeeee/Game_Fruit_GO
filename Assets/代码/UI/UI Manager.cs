@@ -8,17 +8,20 @@ public class UIManager : MonoBehaviour
     [Header("ÊÂ¼þ¼àÌý")]
     public CharacterObjectSO healthEvent;
     public CharacterObjectSO xiadunEvent;
+    public CharacterObjectSO huaChanEvent;
 
     private void OnEnable()
     {
         healthEvent.onEventRaised += OnHealthChange;
         xiadunEvent.onEventRaised += OnXiadunChange;
+        huaChanEvent.onEventRaised += OnHuaChanChange;
     }
 
     private void OnDisable()
     {
         healthEvent.onEventRaised -= OnHealthChange;
         xiadunEvent.onEventRaised -= OnXiadunChange;
+        huaChanEvent.onEventRaised -= OnHuaChanChange;
     }
 
     private void OnHealthChange(Character character)
@@ -30,5 +33,10 @@ public class UIManager : MonoBehaviour
     {
         var persentage = character.nowCrouchTime / character.crouchTime;
         playerUI.OnXiadunChange(persentage);
+    }
+    private void OnHuaChanChange(Character character)
+    {
+        var persentage = character.nowTili / character.maxTili;
+        playerUI.OnHuaChanChange(persentage);
     }
 }

@@ -273,7 +273,7 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -1, y: -8}
-        - {x: 3, y: -6}
+        - {x: 4, y: -6}
         - {x: 8, y: -4}
         - {x: 8, y: -8}
       tessellationDetail: 0
@@ -299,7 +299,7 @@ TextureImporter:
       physicsShape:
       - - {x: -8, y: -8}
         - {x: -8, y: -4}
-        - {x: -3, y: -6}
+        - {x: -4, y: -6}
         - {x: 1, y: -8}
       tessellationDetail: 0
       bones: []
@@ -702,7 +702,7 @@ TextureImporter:
       physicsShape:
       - - {x: -8, y: -8}
         - {x: -8, y: 8}
-        - {x: 2, y: 8}
+        - {x: 1, y: 8}
         - {x: 8, y: 4}
         - {x: 8, y: -8}
       tessellationDetail: 0
@@ -728,7 +728,7 @@ TextureImporter:
       physicsShape:
       - - {x: -8, y: -8}
         - {x: -8, y: 4}
-        - {x: 8, y: -3}
+        - {x: 8, y: -4}
         - {x: 8, y: -8}
       tessellationDetail: 0
       bones: []
@@ -10285,10 +10285,10 @@ TextureImporter:
       "\u5916\u90E8\u73AF\u5883_66": -1823256298
       "\u5916\u90E8\u73AF\u5883_440": 426309267
       "\u5916\u90E8\u73AF\u5883_414": -1424195294
-      "\u5916\u90E8\u73AF\u5883_402": -731576448
+      "\u5916\u90E8\u73AF\u5883_30": 1649058949
       "\u5916\u90E8\u73AF\u5883_73": -1647193067
       "\u5916\u90E8\u73AF\u5883_210": 1522473648
-      "\u5916\u90E8\u73AF\u5883_30": 1649058949
+      "\u5916\u90E8\u73AF\u5883_402": -731576448
       "\u77F3\u5934\u53F3": -93775248
       "\u5916\u90E8\u73AF\u5883_381": -1800804762
       "\u5916\u90E8\u73AF\u5883_396": 1621211622

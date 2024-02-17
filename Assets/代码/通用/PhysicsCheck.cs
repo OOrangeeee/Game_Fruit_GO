@@ -5,9 +5,12 @@ using UnityEngine;
 public class PhysicsCheck : MonoBehaviour
 {
     [Header("ÊÖ¶¯¿ØÖÆ²ÎÊý")]
+    public bool isPlayer;
     public bool manual;
     [Header("¿Ø¼þ")]
     private CapsuleCollider2D cc2;
+    private Player_Controller playerController;
+    private Rigidbody2D rb;
     [Header("¼ì²âÅö×²")]
     public float checkRaduis;//¼ì²â·¶Î§
     public Vector2 bottomOffset;//½Åµ×Î»ÒÆ²îÖµ
@@ -17,13 +20,20 @@ public class PhysicsCheck : MonoBehaviour
     public bool touchLeftWall;
     public bool touchRightWall;
     public LayerMask groundLayer;//¼ì²âÍ¼²ã
+    public bool isWall;
 
     private void Awake()
     {
+        cc2=GetComponent<CapsuleCollider2D>();
         if (!manual)
         {
             rightOffset = new Vector2((cc2.bounds.size.x + cc2.offset.x) / 2f, cc2.bounds.size.y / 2);
             leftOffset = new Vector2(-rightOffset.x, rightOffset.y);
+        }
+        if (isPlayer)
+        {
+            playerController = GetComponent<Player_Controller>();
+            rb = GetComponent<Rigidbody2D>();
         }
     }
 
@@ -36,13 +46,20 @@ public class PhysicsCheck : MonoBehaviour
     /// </summary>
     public void check()
     {
-        isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y), checkRaduis, groundLayer);
-
+        if (isWall)
+            isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y), checkRaduis, groundLayer);
+        else
+            isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, 0), checkRaduis, groundLayer);
         touchLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(leftOffset.x, leftOffset.y), checkRaduis, groundLayer);
         touchRightWall = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(rightOffset.x, rightOffset.y), checkRaduis, groundLayer);
 
+        if (isPlayer)
+        {
+            isWall = (touchLeftWall && playerController.inputDirection.x < 0f || touchRightWall && playerController.inputDirection.x > 0f) && rb.velocity.y < 0f;
 
+        }
     }
+
     /// <summary>
     /// ¿ÉÊÓ»¯¼ì²â·¶Î§
     /// </summary>

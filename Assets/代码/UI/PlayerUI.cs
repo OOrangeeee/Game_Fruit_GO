@@ -10,6 +10,18 @@ public class PlayerUI : MonoBehaviour
     public Image tiliImage;
     public Image xiadunImage;
 
+    private void Update()
+    {
+        if (healthDeleteImage.fillAmount > healthImage.fillAmount)
+        {
+            healthDeleteImage.fillAmount -= Time.deltaTime * 0.4f;
+        }
+        else
+        {
+            healthDeleteImage.fillAmount = healthImage.fillAmount;
+        }
+    }
+
     /// <summary>
     /// µ÷ÕûÑªÁ¿
     /// </summary>
@@ -21,6 +33,10 @@ public class PlayerUI : MonoBehaviour
     public void OnXiadunChange(float persentage)
     {
         xiadunImage.fillAmount = persentage;
+    }
+    public void OnHuaChanChange(float persentage)
+    {
+        tiliImage.fillAmount = persentage;
     }
 
 }

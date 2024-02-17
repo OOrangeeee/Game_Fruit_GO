@@ -80,6 +80,15 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slide"",
+                    ""type"": ""Button"",
+                    ""id"": ""d8bebf58-f7c6-4dd6-b3a1-1e1f99c9191d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -377,6 +386,50 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3840b3ee-6cf7-467d-af84-7e76c3f562bd"",
+                    ""path"": ""<Keyboard>/alt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2f376b4-d5b5-4e05-918c-8f3f4c11bdba"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""abe617b0-1931-4e52-80d1-112e417c050c"",
+                    ""path"": ""<Mouse>/forwardButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7771b58a-409b-4db2-aa2d-4a58f8c210b3"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Slide"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -970,6 +1023,7 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_WalkButton = m_Gameplay.FindAction("WalkButton", throwIfNotFound: true);
         m_Gameplay_Attack = m_Gameplay.FindAction("Attack", throwIfNotFound: true);
+        m_Gameplay_Slide = m_Gameplay.FindAction("Slide", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1047,6 +1101,7 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_WalkButton;
     private readonly InputAction m_Gameplay_Attack;
+    private readonly InputAction m_Gameplay_Slide;
     public struct GameplayActions
     {
         private @PlayerInputControl m_Wrapper;
@@ -1057,6 +1112,7 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @WalkButton => m_Wrapper.m_Gameplay_WalkButton;
         public InputAction @Attack => m_Wrapper.m_Gameplay_Attack;
+        public InputAction @Slide => m_Wrapper.m_Gameplay_Slide;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1084,6 +1140,9 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
                 @Attack.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAttack;
+                @Slide.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSlide;
+                @Slide.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSlide;
+                @Slide.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnSlide;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1106,6 +1165,9 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
+                @Slide.started += instance.OnSlide;
+                @Slide.performed += instance.OnSlide;
+                @Slide.canceled += instance.OnSlide;
             }
         }
     }
@@ -1268,6 +1330,7 @@ public partial class @PlayerInputControl : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnWalkButton(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnSlide(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -14,6 +14,12 @@ public class Character : MonoBehaviour
     public float nowCrouchTime;
     public bool isCrouch;
     public bool canCrouch;
+    public float crouchBack;
+    [Header("角色体力（仅限玩家）")]
+    public float maxTili;
+    public float nowTili;
+    public float tiliBack;
+    public float huaChanCost;
     [Header("受伤无敌计时和状态")]
     public float invulerableTime;
     private float invulerableCounter;
@@ -25,12 +31,16 @@ public class Character : MonoBehaviour
     public UnityEvent<Character> OnHealthChange;
     [Header("下蹲改变")]
     public UnityEvent<Character> OnXiadunChange;
+    [Header("滑铲体力改变")]
+    public UnityEvent<Character> OnHuaChanChange;
     private void Start()
     {
         nowLife = maxLife;
         nowCrouchTime = crouchTime;
+        nowTili = maxTili;
         OnHealthChange.Invoke(this);
         OnXiadunChange.Invoke(this);
+        OnHuaChanChange.Invoke(this);
     }
     private void Update()
     {
@@ -99,7 +109,7 @@ public class Character : MonoBehaviour
         {
             if (nowCrouchTime < crouchTime)
             {
-                nowCrouchTime += Time.deltaTime * 0.1f;
+                nowCrouchTime += Time.deltaTime * crouchBack;
                 OnXiadunChange?.Invoke(this);
             }
         }
@@ -111,5 +121,20 @@ public class Character : MonoBehaviour
         {
             canCrouch = true;
         }
+    }
+
+    public void SlideChangeTili()
+    {
+        if (nowTili >= huaChanCost)
+            nowTili -= huaChanCost;
+    }
+
+    public void TiliBack()
+    {
+        if (nowTili <= maxTili)
+        {
+            nowTili += Time.deltaTime * tiliBack;
+        }
+        OnHuaChanChange?.Invoke(this);
     }
 }

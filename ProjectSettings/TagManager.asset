@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - bounds
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - "\u654C\u4EBA"
   - "\u65E0\u654C"
   - "\u653B\u51FB"
-  - 
+  - "\u6ED1\u94F2"
   - 
   - 
   - 

@@ -36,7 +36,7 @@ public class enemy : MonoBehaviour
 
     [Header("等待时间")]
     public float waitTime;
-    [HideInInspector] public float nowWaitTime;
+    public float nowWaitTime;
 
     [Header("检测等待时间")]
     public float lostTime;
@@ -47,6 +47,7 @@ public class enemy : MonoBehaviour
     public Vector2 checkSize;
     public float checkDistance;
     public LayerMask attackLayer;
+    public LayerMask attackLayer2;
 
     [Header("基本信息")]
     public Vector3 startPoint;
@@ -192,7 +193,7 @@ public class enemy : MonoBehaviour
     /// <returns>是否找到</returns>
     public virtual bool FoundPlayer()
     {
-        return Physics2D.BoxCast(transform.position + (Vector3)centeroffset, checkSize, 0, faceDir, checkDistance, attackLayer);
+        return Physics2D.BoxCast(transform.position + (Vector3)centeroffset, checkSize, 0, faceDir, checkDistance, attackLayer) || Physics2D.BoxCast(transform.position + (Vector3)centeroffset, checkSize, 0, faceDir, checkDistance, attackLayer2);
     }
     /// <summary>
     /// 切换状态

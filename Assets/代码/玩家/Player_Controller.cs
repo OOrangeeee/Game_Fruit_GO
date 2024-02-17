@@ -16,7 +16,7 @@ public class Player_Controller : MonoBehaviour
     private CapsuleCollider2D cc2;
     private Character character;
     [Header("移动参数")]
-    private Vector2 inputDirection;//输入方向
+    [HideInInspector] public Vector2 inputDirection;//输入方向
     public float speed;
     public float runSpeed;
     private float walkSpeed => speed / 2.5f;
@@ -25,10 +25,16 @@ public class Player_Controller : MonoBehaviour
     private Vector2 originalColiderPosition;
     [Header("跳跃参数")]
     public float jumpForce;
+    public float dengQiangForce;
+    public bool wallJump;
+    [Header("滑铲参数")]
+    public float slideDistance;
+    public float slideFroce;
     [Header("状态")]
     [HideInInspector] public bool isHurt;
     [HideInInspector] public bool isDead;
     [HideInInspector] public bool isAttack;
+    [HideInInspector] public bool isSlide;
     [Header("材质")]
     public PhysicsMaterial2D noMoCa;
     public PhysicsMaterial2D normal;
@@ -75,7 +81,12 @@ public class Player_Controller : MonoBehaviour
         #region 攻击函数挂载
         inputControl.Gameplay.Attack.started += PlayerAttack;
         #endregion
+
+        #region 滑铲挂载
+        inputControl.Gameplay.Slide.started += Slide;
+        #endregion
     }
+
     private void OnEnable()
     {
         inputControl.Enable();
@@ -92,11 +103,12 @@ public class Player_Controller : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (!isHurt)
+        if (!isHurt && !isSlide)
         {
             Move();
         }
         character.CrouchTimeCounter();
+        character.TiliBack();
         ChanegPhysicsMaterial();
     }
     /// <summary>
@@ -104,7 +116,7 @@ public class Player_Controller : MonoBehaviour
     /// </summary>
     public void Move()
     {
-        if (!character.isCrouch)
+        if (!character.isCrouch && !wallJump && !isSlide)
             rb.velocity = new Vector2(inputDirection.x * speed * Time.deltaTime, rb.velocity.y);
         if (inputDirection.x <= -0.1f)
         {
@@ -139,8 +151,14 @@ public class Player_Controller : MonoBehaviour
     /// <param name="obj">无</param>
     public void Jump(InputAction.CallbackContext obj)
     {
-        if (physicsCheck.isGround)
+        if (physicsCheck.isGround && !isSlide)
             rb.AddForce(transform.up * jumpForce, ForceMode2D.Impulse);
+        else if (physicsCheck.isWall && !isSlide)
+        {
+            rb.AddForce(new Vector2(-inputDirection.x, 3f) * dengQiangForce, ForceMode2D.Impulse);
+            wallJump = true;
+        }
+
     }
     /// <summary>
     /// 攻击函数，挂载到攻击按钮
@@ -158,13 +176,25 @@ public class Player_Controller : MonoBehaviour
     /// </summary>
     private void ChanegPhysicsMaterial()
     {
-        if (physicsCheck.isGround)
+        if (physicsCheck.isGround && !isSlide)
         {
             cc2.sharedMaterial = normal;
         }
         else
         {
             cc2.sharedMaterial = noMoCa;
+        }
+        if (physicsCheck.isWall)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y / 4f);
+        }
+        else
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
+        }
+        if (wallJump && rb.velocity.y < 0)
+        {
+            wallJump = false;
         }
     }
     /// <summary>
@@ -187,5 +217,34 @@ public class Player_Controller : MonoBehaviour
     {
         isDead = true;
         inputControl.Gameplay.Disable();
+    }
+
+    private void Slide(InputAction.CallbackContext context)
+    {
+        if (!isSlide && physicsCheck.isGround && character.nowTili >= character.huaChanCost && !(physicsCheck.touchLeftWall && transform.localScale.x < 0) && !(physicsCheck.touchRightWall && transform.localScale.x > 0))
+        {
+            isSlide = true;
+            character.SlideChangeTili();
+            gameObject.layer = 11;
+            var targetPos = new Vector3(transform.position.x + slideDistance * transform.localScale.x, transform.position.y);
+            rb.AddForce(new Vector2(transform.localScale.x * slideFroce, 0), ForceMode2D.Impulse);
+            StartCoroutine(InSlide(targetPos));
+        }
+    }
+    private IEnumerator InSlide(Vector3 target)
+    {
+        do
+        {
+            yield return null;
+            if (physicsCheck.touchLeftWall || physicsCheck.touchRightWall)
+            {
+                isSlide = false;
+                rb.velocity = new Vector2(0, rb.velocity.y);
+                yield break;
+            }
+            Debug.Log("OK");
+        } while (Math.Abs(target.x - transform.position.x) > 0.1f && Math.Abs(target.x - transform.position.x) < slideDistance + 1 && Math.Abs(rb.velocity.x) >= 0.1f);
+        isSlide = false;
+        gameObject.layer = 7;
     }
 }

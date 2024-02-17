@@ -36,6 +36,8 @@ public class Player_Animation : MonoBehaviour
         anim.SetBool("isDeath", playerController.isDead);
         anim.SetBool("isAttack", playerController.isAttack);
         //anim.SetBool("turn", playerController.transform.localScale.x < 0 ? true : false);
+        anim.SetBool("isWall", physicsCheck.isWall);
+        anim.SetBool("isHuaChan", playerController.isSlide);
     }
 
     public void PlayHurt()
